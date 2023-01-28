@@ -1,0 +1,33 @@
+{
+  "name": "social-media-platform",
+  "version": "1.0.0",
+  "description": "The project is a social media platform for sharing and discovering new music. Users can upload their own music tracks and share them with others, as well as download tracks that they like. Additionally, users can comment on tracks and give them a \"like\" or \"dislike\" rating.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achraflafkiri/social-media-platform.git"
+  },
+  "author": "achraf lafkiri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/achraflafkiri/social-media-platform/issues"
+  },
+  "homepage": "https://github.com/achraflafkiri/social-media-platform#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "email-validator": "^2.0.4",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.9.0",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
