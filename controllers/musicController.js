@@ -4,60 +4,60 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const formidable = require("formidable");
 const fs = require("fs");
+// CAN I USE THE IMPORT SYNTAX
+// const esModuleShims = require("es-module-shims");
+
+// import { initializeApp } from "firebase/app";
+// import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+
+// // TODO: Replace the following with your app's Firebase project configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyA4nWJ9i0u296H1NFJN--5pQdi3ojOKXKA",
+//   authDomain: "social-media-platform-7ab73.firebaseapp.com",
+//   projectId: "social-media-platform-7ab73",
+//   storageBucket: "social-media-platform-7ab73.appspot.com",
+//   messagingSenderId: "819500468390",
+//   appId: "1:819500468390:web:36921bf94329680f1ccc67",
+//   measurementId: "G-FQ4YJNLLFP",
+// };
+
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+
+// Get a list of cities from your database
+// async function getCities(db) {
+//   const citiesCol = collection(db, "cities");
+//   const citySnapshot = await getDocs(citiesCol);
+//   const cityList = citySnapshot.docs.map((doc) => doc.data());
+//   return cityList;
+// }
 
 // const uploadMusic = catchAsync(async (req, res, next) => {
+//   try {
+//     const { title, artist, album, genre, length } = req.body;
 
-//     console.log("*****upload MUSIC*****");
-//     console.log("**********************");
+//     console.log("form data => ", title, artist, album, genre, length);
 
-//     //   console.log("req => ", req);
-//   //   console.log("req.body => ", req.body);
-//   //   console.log("req.body => ", req.params);
-
-//     const form = formidable({
-//         multiples: true,
-//         uploadDir: `${__dirname}/../public/audios`,
-//     });
-
-//     form.parse(req, async (err, fields, files) => {
-//         // console.log("fields => ", fields);
-//         // console.log("files => ", files);
-
-//         const { title, artist, album, genre, length } = fields;
-//         // mimetype: 'audio/mpeg'
-//         // console.log("album", album);
-//         // console.log("files.file", files.file);
-
-//         const oldpath = files.file.filepath;
-//         const newpath = `${__dirname}/../public/audios${files.file.originalFilename}`;
-//         fs.rename(oldpath, newpath, (err) => {
-//         if (err) return next(err);
-
-//         if (!files.file.mimetype.startsWith("audio/")) return next(new AppError(415, "Unsupported type of this file"));
-
-//         // STORE PRODUCT INTO A DATABASE
-//         const newFile = await Music.create({
-//             file: files.file.originalFilename,
-//             title: title,
-//             artist: artist,
-//             album: album,
-//             genre: genre,
-//             length: length,
-//         });
-
-//         res.status(201).json({
-//             status: "success",
-//             newFile,
-//         });
-
-//         //  return next(new AppError(415, "Unsupported type of this file, please uploaded an image"));
-//         // 415 Unsupported Media Type: The server does not support the media type of the request.
-//         // This status code can be used when the client uploads a file with an unsupported file format.
-
-//          });
-//     });
-
+//     //Upload music to firebase storage
+//     // const file = req.files.audio;
+//     // const fileName = `music/${music._id}.${file.mimetype.split("/")[1]}`;
+//     // const fileUpload = await storage.bucket().upload(file.tempFilePath, {
+//     //   destination: fileName,
+//     //   metadata: {
+//     //     contentType: file.mimetype,
+//     //   },
+//     // });
+//     // music.audioUrl = `https://storage.googleapis.com/${storage.bucket().name}/${
+//     //   fileUpload[0].name
+//     // }`;
+//     // await music.save();
+//     // res.status(201).send(music);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
 // });
+
+// FOR MONGODB
 
 const uploadMusic = catchAsync(async (req, res, next) => {
   console.log("*****upload MUSIC*****");
@@ -101,6 +101,44 @@ const uploadMusic = catchAsync(async (req, res, next) => {
 
 const getAllMusic = catchAsync(async (req, res, next) => {
   console.log("*****GET MUSIC*****");
+
+  const music = await Music.find();
+
+  res.status(201).send({
+    status: "success",
+    music,
+  });
 });
 
-module.exports = { getAllMusic, uploadMusic };
+const getOneMusic = catchAsync(async (req, res, next) => {
+  console.log("*****GET ONE MUSIC*****");
+
+  console.log("id => ", req.params.MusicId);
+
+  const music = await Music.findById(req.params.MusicId);
+
+  res.status(201).send({
+    status: "success",
+    music,
+  });
+});
+
+const deleteOneMusic = catchAsync(async (req, res, next) => {
+  console.log("*****GET ONE MUSIC*****");
+
+  console.log("id => ", req.params.MusicId);
+
+  const music = await Music.findByIdAndDelete(req.params.MusicId);
+  if (!music) return next(new AppError(404, "Music not found with that ID."));
+
+
+  // Delete the music document from the database
+  await music.remove();
+
+  res.status(204).send({
+    status: "success",
+    message: "Music deleted successfully",
+  });
+});
+
+module.exports = { getAllMusic, getOneMusic, uploadMusic, deleteOneMusic };

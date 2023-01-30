@@ -1,8 +1,18 @@
 const { Router } = require("express");
-const { getAllMusic, uploadMusic } = require("../controllers/musicController");
+const {
+  getAllMusic,
+  uploadMusic,
+  getOneMusic,
+  deleteOneMusic,
+} = require("../controllers/musicController");
 const router = Router();
+const { checkAuth, checkAdmin } = require("../middlewares/auth");
 
 router.route("/").get(getAllMusic);
-router.route("/upload").post(uploadMusic);
+router
+  .route("/:MusicId")
+  .get(checkAdmin, getOneMusic)
+  .delete(checkAdmin, deleteOneMusic);
+router.route("/upload").post(checkAuth, uploadMusic);
 
 module.exports = router;

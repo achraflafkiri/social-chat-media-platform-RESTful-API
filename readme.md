@@ -1,8 +1,8 @@
-#السلام عليكم
+# السلام عليكم  
 
 # Controllers:
 
-    ** Music Controller **
+    Music Controller
 
     Upload Music: Create a route and controller function that allows authenticated users to upload music files to the server and create a new music document in the database. You'll need to handle the file upload using a middleware such as Multer and then save the file path to the 'file' field in the music schema.
 
@@ -20,14 +20,15 @@
 
     Search Music: Create a route and controller function that allows users to search for music by title, artist, or album. This could involve using a text index and the $text operator in MongoDB to perform the search.
 
-- Type of litters  
-   Controller:
+# Type of litters  
+  Controller:
   CamelCase (getAllUsers)
   Models:
   lowerCase (likesmodel)
 
 errController.js - ghadi nrja3 liha fach nkmal upload audio wela music
 
+# Folders structor:
 - app.js (entry point for the application)
 - package.json
 - routes/

@@ -7,6 +7,8 @@ const authRouter = require("./routes/authRouter");
 const errController = require("./controllers/errController");
 const musicRouter = require("./routes/musicRouter");
 const cookieParser = require("cookie-parser");
+// CAN I USE THE IMPORT SYNTAX
+// const esModuleShims = require("es-module-shims");
 
 const app = express();
 dotenv.config({ path: "./config.env" });
@@ -20,10 +22,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/music", musicRouter);
 app.use(errController);
 app.use(cookieParser());
-app.use(bodyParser());
 
 app.listen(3000, () => {
   console.log("start server at port 3000");
 });
-
-console.log("hello world")
