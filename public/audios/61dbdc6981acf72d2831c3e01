@@ -1,0 +1,197 @@
+# RESTful API best practices guide - by Shai Yerushalmi
+
+Web API’s is a web development architecture which decoupling the client GUI from the database and the server’s logic. This architecture enables to serve the same interface to multiple clients running on various platforms. Also, the same application can communicate with multiple interfaces.
+
+REST stands for Representational state transfer and its a stateless protocol over HTTP that provides the interactions with the resources stored in the database which contains four basic CRUD actions - Create, Read, Update and Delete.
+
+  
+
+Each CRUD interaction can be defined by combinations of the following:
+
+-   HTTP method (POST / GET / UPDATE / DELETE)
+    
+-   Url endpoint
+    
+-   Headers
+    
+-   Parameters
+    
+-   Data body
+    
+
+## Terminology
+
+REST - Representational State Transfer
+
+Resource - an object or representation of an object
+
+Collection - a set of objects
+
+CRUD - the four basic actions of Create, Read, Update and Delete
+
+API endpoint - url path to locate the resource.
+
+
+
+### Use API versioning prefix
+
+To support previous versions of the API - not always needed, yet it is a good practice
+
+	/api/v1/
+
+
+
+### API endpoint: use nouns, plurals form
+
+`/api/v1/cars/`
+
+
+### Use sub-resource for relationships
+
+The url is describing the query and the relationships requested.
+
+For example, to get all the persons related to a car:
+
+    /api/v1/cars/50023/persons
+
+
+### Server response structure
+
+It is possible to send the object or collection and send the additional meta information such as total-count via headers. Sometimes there is a need for an elaborated response which includes meta data - in this case the following structure can be helpful.
+
+DATA will provide the resource or the collection and INFO will contain the additional metadata, while messages can be added to the MESSAGES array.
+
+  
+HTTP GET /api/v1/{resource}
+```
+{
+	data: {},
+	info: {},
+	messages: []
+}
+```
+
+### Use Content-Type header in response and request
+
+Content-Type: application/json
+
+
+### Pagination by parameters
+There are several methods to achieve pagination - a common method is to use the parameters of limit and offset.
+
+Use the elaborated response or the header X-Total-Count to get from the server the total amount of objects in the requested collection.
+
+    GET /api/v1/{resource}?offset=50&limit=10
+
+
+### Search, sort, fields and filter by parameters
+
+Again - there are several options to implement this
+
+#### Search
+`GET /api/v1/{resource}?q=findme`
+
+#### Sort
+
+    GET /api/v1/{resource}?sort=key1:asc,key2,key3
+
+#### Fields
+
+    GET /api/v1/{resource}?fields=name,color,location
+    
+#### Filter
+
+    GET /api/v1/{resource}?car=bmw
+
+
+### Use HTTP method which correlate with the CRUD action
+|  Action 	| HTTP method  	|Url endpoint   	| Response  	| HTTP code|
+|---	|---	|---	|---	|---	|
+|  Create resource 	|  POST 	|   **/api/v1/{resource}**	|resource object	|201	|
+|  Read resource 	|   GET	|   **/api/v1/{resource}/{id}**	|   resource object	|200	|
+|   Read collection	|   GET	|  /api/v1/{resource} 	|   resource collection	|	200|
+|   Update resource	|  PUT 	|  /api/v1/{resource}/{id} 	|  resource object 	|200 / 204 / 201	|
+|   Delete resource	|  DELETE 	|   /api/v1/{resource}/{id}	|   	|200 / 202 / 204	|
+
+
+
+## Use HTTP status codes in responses
+
+
+#### 2xx - Success
+200 - OK
+
+201 - Created
+
+202 - Accepted, queued to be performed
+
+204 - No content
+
+
+#### 3xx - Redirection
+304 - Not modified
+
+
+#### 4xx - Client error
+400 - Bad request
+
+401 - Unauthorized
+
+403 - Forbidden
+
+404 - Not found
+
+
+#### 5xx - Server error
+500 - Internal server error
+
+502 - Bad gateway, in case there is an error in the upstream server
+
+ 
+ 
+## Error object with some helpful info
+
+It can be helpful to add some info.
+```
+{
+	"error": {
+		"status": 400,
+		"message": "invalid id"
+	}
+}
+```
+  
+
+## With great application comes great documentation
+
+Write a great documentation (or follow one). It is always helpful to have a documentation, how ever, since it is time and effort consuming, you can just follow an online available detailed documentation. It will provide the documentation for basic issues such as pagination, url general structure, HTTP error codes, search and sort parameters etc., Still, need to add the end points and model structure.
+
+My favorite documentation to follow is spotify developers API - [https://developer.spotify.com/documentation/web-api/](https://developer.spotify.com/documentation/web-api/)
+
+
+
+
+
+## Advanced API design topics
+
+### Use HATEOAS for better API navigation
+
+HATEOAS - Hypermedia as the Engine of Application State
+
+Use link to related resources in the API response
+
+  
+
+### X-HTTP-Method-Override header
+
+Use this method override the HTTP method.
+
+## References
+
+[https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf](https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf)
+
+[https://restfulapi.net/](https://restfulapi.net/)
+
+[https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/](https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/)
+
+[https://developer.spotify.com/documentation/web-api/](https://developer.spotify.com/documentation/web-api/)

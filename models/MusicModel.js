@@ -1,14 +1,10 @@
-const {
-    Schema,
-    model,
-    mongoose
-} = require("mongoose");
+const { Schema, model, mongoose } = require("mongoose");
 
 const musicSchema = new Schema({
   title: {
     type: String,
     required: [true, "please title is required"],
-    unique: true
+    unique: true,
   },
   artist: {
     type: String,
@@ -16,7 +12,7 @@ const musicSchema = new Schema({
   },
   album: {
     type: String,
-    required: [true, "please album is required"],
+    required: false,
   },
   genre: {
     type: String,
@@ -32,16 +28,22 @@ const musicSchema = new Schema({
   },
   uploader: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   likes: {
     type: Number,
     default: 0,
   },
-  comments: [{
+  comments: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment"
-    }],
+      ref: "Comment",
+    },
+  ],
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Music = model("Music", musicSchema);

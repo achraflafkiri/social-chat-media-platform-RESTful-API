@@ -71,8 +71,16 @@ const uploadMusic = catchAsync(async (req, res, next) => {
   form.parse(req, async (err, fields, files) => {
     if (err) throw err;
 
+    // console.log(files); // TRUE {}
+
+    // console.log(!files); // FALSE FALSE
+    // console.log(!Object.files); // TRUE FALSE
+    // console.log(!Object.keys(files).length); // TRUE FALSE
+    if (!Object.keys(files).length)
+      return next(new AppError(415, "Audio file is required"));
+
     if (!files.file.mimetype.startsWith("audio/")) {
-      throw new AppError(415, "Unsupported type of this file");
+      return next(new AppError(415, "Unsupported type of this file"));
     }
 
     const { title, artist, album, genre, length } = fields;
@@ -83,7 +91,7 @@ const uploadMusic = catchAsync(async (req, res, next) => {
     );
 
     // STORE PRODUCT INTO A DATABASE
-    const newFile = await Music.create({
+    const newAudio = await Music.create({
       file: files.file.originalFilename,
       title: title,
       artist: artist,
@@ -94,7 +102,7 @@ const uploadMusic = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
       status: "success",
-      newFile,
+      newAudio,
     });
   });
 });
@@ -103,6 +111,7 @@ const getAllMusic = catchAsync(async (req, res, next) => {
   console.log("*****GET MUSIC*****");
 
   const music = await Music.find();
+  if (!music) return next(new AppError(404, "Music not found"));
 
   res.status(201).send({
     status: "success",
@@ -116,6 +125,7 @@ const getOneMusic = catchAsync(async (req, res, next) => {
   console.log("id => ", req.params.MusicId);
 
   const music = await Music.findById(req.params.MusicId);
+  if (!music) return next(new AppError(404, "No music found by this id"));
 
   res.status(201).send({
     status: "success",
@@ -128,12 +138,15 @@ const deleteOneMusic = catchAsync(async (req, res, next) => {
 
   console.log("id => ", req.params.MusicId);
 
-  const music = await Music.findByIdAndDelete(req.params.MusicId);
+  const music = await Music.findByIdAndUpdate(
+    req.params.MusicId,
+    { $set: { deleted: true } },
+    { new: true }
+  );
   if (!music) return next(new AppError(404, "Music not found with that ID."));
 
-
-  // Delete the music document from the database
-  await music.remove();
+  // Save the music document from the database
+  await music.save();
 
   res.status(204).send({
     status: "success",
