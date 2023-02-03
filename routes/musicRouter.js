@@ -4,15 +4,16 @@ const {
   uploadMusic,
   getOneMusic,
   deleteOneMusic,
+  deleteAllMusics,
 } = require("../controllers/musicController");
 const router = Router();
 const { checkAuth, checkAdmin } = require("../middlewares/auth");
 
-router.route("/").get(getAllMusic);
+router.route("/").get(getAllMusic).delete(checkAuth, deleteAllMusics);
 router
   .route("/:MusicId")
-  .get(checkAdmin, getOneMusic)
-  .delete(checkAdmin, deleteOneMusic);
+  .get(checkAuth, getOneMusic)
+  .delete(checkAuth, deleteOneMusic);
 router.route("/upload").post(checkAuth, uploadMusic);
 
 module.exports = router;

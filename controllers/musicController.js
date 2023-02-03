@@ -146,12 +146,26 @@ const deleteOneMusic = catchAsync(async (req, res, next) => {
   if (!music) return next(new AppError(404, "Music not found with that ID."));
 
   // Save the music document from the database
-  await music.save();
+  // await music.save();
 
-  res.status(204).send({
+  res.status(200).send({
     status: "success",
     message: "Music deleted successfully",
   });
 });
 
-module.exports = { getAllMusic, getOneMusic, uploadMusic, deleteOneMusic };
+const deleteAllMusics = catchAsync(async (req, res, next) => {  
+    console.log("*****DELETE ALL MUSICS*****");
+
+    const musics = await Music.find();
+    if (!musics) return next(new AppError(404, "No Music uploaded yet!."));
+
+    await musics.remove()
+
+    res.status(200).send({
+      status: "success",
+      message: "All Musics has been deleted successfully",
+    });
+})
+
+module.exports = { getAllMusic, getOneMusic, uploadMusic, deleteOneMusic, deleteAllMusics };
