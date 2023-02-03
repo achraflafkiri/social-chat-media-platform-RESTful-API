@@ -28,4 +28,5 @@ const getOneUser = catchAsync(async (req, res, next) => {
   });
 });
 
+
 module.exports = { getAllUsers, getOneUser};
