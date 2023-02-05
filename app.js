@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/DB");
 const adminRouter = require("./routes/adminRouter");
 const authRouter = require("./routes/authRouter");
-const errController = require("./controllers/errController");
+const handleErrors = require("./middlewares/handleErrors");
 const musicRouter = require("./routes/musicRouter");
 const cookieParser = require("cookie-parser");
 // CAN I USE THE IMPORT SYNTAX
@@ -20,7 +20,7 @@ connectDB();
 app.use("/api/v1/users", adminRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/music", musicRouter);
-app.use(errController);
+app.use(handleErrors);
 app.use(cookieParser());
 
 app.listen(3000, () => {

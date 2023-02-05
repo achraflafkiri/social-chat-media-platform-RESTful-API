@@ -38,14 +38,19 @@ const Signin = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
   if (!email && !username)
     return next(new AppError(500, "please enter your email or username"));
-  if (!password) return next(new AppError(500, "Your password is not correct!"));
+  if (!password)
+    return next(new AppError(500, "Your password is not correct!"));
   if (email && password) {
-    const user = await User.findOne({ email: email, password: password });
+    const user = await User.findOne({ email: email });
     if (!user) return next(new AppError(404, "You don't have an account"));
+    if (!user || !(await user.isCorrectPassword(password, user.password)))
+      return next(new AppError(401, "incorrect email or password"));
     if (user) passport(user, res);
   } else if (username && password) {
-    const user = await User.findOne({ username: username, password: password });
+    const user = await User.findOne({ username: username });
     if (!user) return next(new AppError(404, "You don't have an account"));
+    if (!user || !(await user.isCorrectPassword(password, user.password)))
+      return next(new AppError(401, "incorrect email or password"));
     if (user) passport(user, res);
   }
 });
