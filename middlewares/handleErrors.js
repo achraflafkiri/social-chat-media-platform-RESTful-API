@@ -13,7 +13,7 @@ const deveHandller = (err,req,res)=>{
 // ValidationError handler
 const ValidationError=(err)=>{
     const allErros = Object.values(err.errors).map(el=>el.message)
-    console.log("*************ValidationError************** =>", allErros)
+    console.log(allErros , "*************")
      return new AppError(400,`${allErros.join(' , ')}`)
 }
 // duplicate error

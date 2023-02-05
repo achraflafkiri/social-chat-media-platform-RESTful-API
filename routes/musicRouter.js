@@ -7,12 +7,12 @@ const {
   deleteAllMusics,
 } = require("../controllers/musicController");
 const router = Router();
-const { checkAuth, checkAdmin } = require("../middlewares/auth");
+const { checkAuth, checkAdmin } = require("../middlewares/checkLogin");
 
 router.route("/").get(getAllMusic).delete(checkAuth, deleteAllMusics);
 router
   .route("/:MusicId")
-  .get(checkAuth, getOneMusic)
+  .get(checkAdmin, getOneMusic)
   .delete(checkAuth, deleteOneMusic);
 router.route("/upload").post(checkAuth, uploadMusic);
 

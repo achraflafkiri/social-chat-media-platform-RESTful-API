@@ -2,14 +2,13 @@ const User = require("../models/UserModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const crypto = require("crypto")
 
-// GET PASSPORT
+// get the passport
 const passport = async (user, res) => {
-  const token = jwt.sign({ id: user._id }, process.env.JWT, {
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWTEXPIRESDELAI,
   });
-  console.log(token);
   res.status(200).json({
     status: "success",
     user,
@@ -17,37 +16,33 @@ const passport = async (user, res) => {
   });
 };
 
-// SIGN UP
+// Sign up
 const Signup = catchAsync(async (req, res, next) => {
   const { username, email, password, confirmpassword } = req.body;
-  if (!username || !email || !password || !confirmpassword)
-    return next(new AppError(500, "the fileds are required"));
 
-  const user = await User.create({
-    username: username,
-    email: email,
-    password: password,
-    confirmpassword: confirmpassword,
+  const newUser = await User.create({
+    username,
+    email,
+    password,
+    confirmpassword,
   });
-
-  passport(user, res);
+  // console.log("signup user ****", newUser);
+  passport(newUser, res);
 });
 
-// SIGN IN
+// Signin
 const Signin = catchAsync(async (req, res, next) => {
-  const { email, username, password } = req.body;
-  if (!email && !username)
-    return next(new AppError(500, "please enter your email or username"));
-  if (!password) return next(new AppError(500, "Your password is not correct!"));
-  if (email && password) {
-    const user = await User.findOne({ email: email, password: password });
-    if (!user) return next(new AppError(404, "You don't have an account"));
-    if (user) passport(user, res);
-  } else if (username && password) {
-    const user = await User.findOne({ username: username, password: password });
-    if (!user) return next(new AppError(404, "You don't have an account"));
-    if (user) passport(user, res);
-  }
+  // check if the user enter the password and the email
+  const { email, password } = req.body;
+  if (!email || !password)
+    return next(new AppError(401, "please enter your email and your password"));
+  // check if the email and the password are true
+  const user = await User.findOne({ email });
+  console.log("signin user ****", user);
+  if (!user || !(await user.isCorrectPassword(password, user.password)))
+    return next(new AppError(401, "incorrect email or password"));
+  // give the passport
+  passport(user, res);
 });
 
 module.exports = { Signup, Signin };

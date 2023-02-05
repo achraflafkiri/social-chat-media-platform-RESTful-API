@@ -1,15 +1,18 @@
 const { Schema, model } = require("mongoose");
 var validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const userschema = new Schema(
   {
     username: {
       type: String,
       required: [true, "Username is required"],
+      unique: true
     },
     email: {
       type: String,
       required: [true, "email is required"],
+      unique: true,
       validate: {
         validator: (value) => {
           return validator.isEmail(value);
@@ -58,6 +61,20 @@ const userschema = new Schema(
   }
 );
 
+userschema.pre("save",async function(next){
+  if( ! this.isModified("password")) return next()
+  this.password = await bcrypt.hash(this.password,12)
+  this.confirmPassword = undefined
+})
+
+// check if the password is true
+userschema.methods.isCorrectPassword = async function (
+  condidatPassword,
+  password
+) {
+  console.log("*****");
+  return await bcrypt.compare(condidatPassword, password);
+};
 
 const User = model("User", userschema);
 module.exports = User;
