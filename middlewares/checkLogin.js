@@ -21,7 +21,6 @@ const checkAuth = catchAsync(async(req,res,next)=>{
 
 const checkAdmin = catchAsync(async (req, res, next) => {
   console.log("****************checkAdmin**************");
-  // ! Check if the user is an admin
   // ? console.log("req.user", req.headers.authorization);
 
   if (!req.headers.authorization)
@@ -29,10 +28,12 @@ const checkAdmin = catchAsync(async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   console.log("token => ", token);
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  console.log(decoded.id)
   const user = await User.findById(decoded.id);
   console.log("user => is admin ", user);
   if (!user.isAdmin) return next(new AppError(403, "Forbidden - Only admins are allowed to access this route."));
   req.userData = decoded;
+  console.log(user.isAdmin)
 
   // If the user is an admin, call the next middleware function
   next();

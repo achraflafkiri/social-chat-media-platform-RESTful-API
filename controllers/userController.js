@@ -17,8 +17,8 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 const getOneUser = catchAsync(async (req, res, next) => {
   console.log("*******************getOneUer**********************");
   const userId = req.params.id;
-  const user = await User.findById({ id: userId });
-    if (!user) return next(AppError(404, "User not found"))
+  const user = await User.findById(userId);
+  if (!user) return next(AppError(404, "User not found"));
   res.status(200).json({
     status: "success",
     data: {
@@ -28,4 +28,8 @@ const getOneUser = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllUsers, getOneUser};
+const updateProfile = catchAsync(async (req, res, next) => {
+  console.log("*******************updateProfile**********************");
+});
+
+module.exports = { getAllUsers, getOneUser, updateProfile };
