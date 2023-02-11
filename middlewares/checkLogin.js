@@ -5,7 +5,7 @@ const catchAsync = require("../utils/catchAsync");
 
 const checkAuth = catchAsync(async(req,res,next)=>{
   // check if there is a token
-  if(!req.headers.authorization || ! req.headers.authorization.startsWith("Bearer"))return next(new AppError(401,"please log in first"))
+  if(!req.headers.authorization || ! req.headers.authorization.startsWith("Bearer"))return next(new AppError(401,"Please log in first"))
   // get the token
   const token = req.headers.authorization.split(" ")[1]
   //check if the token if true

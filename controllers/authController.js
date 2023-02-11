@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-// GET PASSPORT
+// get the passport
 const passport = async (user, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWTEXPIRESDELAI,
@@ -17,20 +17,18 @@ const passport = async (user, res) => {
   });
 };
 
-// SIGN UP
+// Sign up
 const Signup = catchAsync(async (req, res, next) => {
   const { username, email, password, confirmpassword } = req.body;
-  if (!username || !email || !password || !confirmpassword)
-    return next(new AppError(500, "the fileds are required"));
 
-  const user = await User.create({
-    username: username,
-    email: email,
-    password: password,
-    confirmpassword: confirmpassword,
+  const newUser = await User.create({
+    username,
+    email,
+    password,
+    confirmpassword,
   });
-
-  passport(user, res);
+  // console.log("signup user ****", newUser);
+  passport(newUser, res);
 });
 
 // SIGN IN
@@ -46,6 +44,8 @@ const Signin = catchAsync(async (req, res, next) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return next(new AppError(401, "Invalid credentials"));
+
+  passport(user, res);
 
   // send response to the client
   res.status(200).json({
