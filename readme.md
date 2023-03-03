@@ -51,3 +51,82 @@ errController.js - ghadi nrja3 liha fach nkmal upload audio wela music
   - Like.js (defines the Like model for the MongoDB database)
 - public/ (folder for storing publicly accessible files, such as music tracks)
 - views/ (folder for storing views)
+
+
+********************************************************************************
+
+PORT = 3000
+#### http://localhost:3000/
+
+# Admin
+GET get all users
+api/v1/users
+
+GET
+get one user
+api/v1/users/idOfUser
+
+
+
+# auth
+POST Sign Up
+api/v1/auth/Signup
+
+{
+    "username": "achraf",
+    "email": "achraflr1@gmail.com",
+    "password": "1",
+    "confirmpassword": "1"
+}
+
+
+POST Sign In
+api/v1/auth/Signin
+
+json: 
+{
+    "username": "achraf",
+    "password": "1"
+}
+
+
+# Likes
+POST
+Add Likes
+api/v1/music/
+
+
+# Music
+POST upload Music
+api/v1/music/upload
+
+## Authorization Bearer Token
+### DATA FIELDS IS REQUIRED
+title       eminem example song
+artist      eminem
+genre       rap
+length      2
+file        /C:/Users/<...>/Music/example.mp3
+
+GET GET ALL Music
+api/v1/music/
+
+GET Music By id
+api/v1/music/63dd3079ecc0247a9bf450c8
+
+DELETE Music By id
+api/v1/music/63dd3079ecc0247a9bf450c8
+
+DELETE Music
+api/v1/music/
+
+
+# USER
+
+GET
+Find user by id
+api/v1/users/63e7ead6963faef4c787152e
+
+GET
+Find users
+api/v1/users/

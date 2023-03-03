@@ -4,64 +4,9 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const formidable = require("formidable");
 const fs = require("fs");
-// CAN I USE THE IMPORT SYNTAX
-// const esModuleShims = require("es-module-shims");
-
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
-
-// // TODO: Replace the following with your app's Firebase project configuration
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA4nWJ9i0u296H1NFJN--5pQdi3ojOKXKA",
-//   authDomain: "social-media-platform-7ab73.firebaseapp.com",
-//   projectId: "social-media-platform-7ab73",
-//   storageBucket: "social-media-platform-7ab73.appspot.com",
-//   messagingSenderId: "819500468390",
-//   appId: "1:819500468390:web:36921bf94329680f1ccc67",
-//   measurementId: "G-FQ4YJNLLFP",
-// };
-
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
-
-// Get a list of cities from your database
-// async function getCities(db) {
-//   const citiesCol = collection(db, "cities");
-//   const citySnapshot = await getDocs(citiesCol);
-//   const cityList = citySnapshot.docs.map((doc) => doc.data());
-//   return cityList;
-// }
-
-// const uploadMusic = catchAsync(async (req, res, next) => {
-//   try {
-//     const { title, artist, album, genre, length } = req.body;
-
-//     console.log("form data => ", title, artist, album, genre, length);
-
-//     //Upload music to firebase storage
-//     // const file = req.files.audio;
-//     // const fileName = `music/${music._id}.${file.mimetype.split("/")[1]}`;
-//     // const fileUpload = await storage.bucket().upload(file.tempFilePath, {
-//     //   destination: fileName,
-//     //   metadata: {
-//     //     contentType: file.mimetype,
-//     //   },
-//     // });
-//     // music.audioUrl = `https://storage.googleapis.com/${storage.bucket().name}/${
-//     //   fileUpload[0].name
-//     // }`;
-//     // await music.save();
-//     // res.status(201).send(music);
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// });
-
-// FOR MONGODB
 
 const uploadMusic = catchAsync(async (req, res, next) => {
   console.log("*****upload MUSIC*****");
-  console.log("**********************");
 
   const form = formidable({
     multiples: true,
