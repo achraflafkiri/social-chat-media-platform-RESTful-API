@@ -14,21 +14,21 @@ likesSchema.index({user:1,file:1},{unique:true})
 
 likesSchema.statics.calcul=async function(musicId){
     const stat =await this.aggregate(
-       [ {
+        [ {
             $match : {file:musicId}
         },{
             $group:{
                 _id:'$file',
-                nLikes : {$sum : 1 } 
+                likes : {$sum : 1 }
             }
         }]
     )
         if(stat.length ==0) return await File.findOneAndUpdate({_id:musicId},{likes:0})
-        await File.findOneAndUpdate({_id:musicId},{likes:stat[0].nLikes})
+        await File.findOneAndUpdate({_id:musicId},{likes:stat[0].likes})
 }
 likesSchema.post("save",async function(doc){
-    console.log(doc.file._id,"*******§§§§§§§§§§§!!!")
-     doc.constructor.calcul(doc.file._id)
+    console.log(doc.file._id,"*******!!!")
+    doc.constructor.calcul(doc.file._id)
 })
 
 likesSchema.post('findOneAndDelete',async function(doc){
