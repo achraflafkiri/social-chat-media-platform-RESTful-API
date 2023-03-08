@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const { checkLogin } = require("../controllers/authController");
+const { checkAuth } = require("../middlewares/checkLogin");
 const { postNewComment,deleteComment } = require("../controllers/commentsController");
 
 const router = Router({mergeParams:true})
-router.route("/").post(checkLogin,postNewComment).delete(checkLogin,deleteComment)
+router.route("/").post(checkAuth,postNewComment).delete(checkAuth,deleteComment)
 module.exports = router

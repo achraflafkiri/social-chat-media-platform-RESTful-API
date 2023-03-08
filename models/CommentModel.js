@@ -1,17 +1,17 @@
 const { Schema, default: mongoose, model } = require("mongoose");
-const File = require("./fileModel");
+const Music = require("./MusicModel");
 
 const CommentsSchema = new Schema({
     text : {
         type :String,
-        required:[true,"Why No Text ?"]
+        required:[true,"Text is required"]
     },
     user:{
         type : mongoose.Schema.ObjectId,
         ref:"User",
     },file:{
         type : mongoose.Schema.ObjectId,
-        ref : "File"
+        ref : "Music"
     },createdAt : {
         type : Date,
         default : Date.now()
@@ -20,23 +20,23 @@ const CommentsSchema = new Schema({
 
 CommentsSchema.index({user:1,file:1},{unique:true})
 
-CommentsSchema.statics.calc =async function(fileId){
+CommentsSchema.statics.calc =async function(musicId){
     const commentsStatics =await this.aggregate([
         {
-            $match:{file:fileId}
+            $match:{file:musicId}
         },
         {
             $group:{
                 _id:"$file",
-                nComments : {$sum:1 } 
+                comments : {$sum:1 } 
             } }
     ])
     console.log(commentsStatics)
-    if(commentsStatics.length==0) return await File.findByIdAndUpdate(fileId,{nComment: 0 } ,{new:false})
-    await File.findByIdAndUpdate(fileId,{nComment:commentsStatics[0].nComments } ,{new:false})
+    if(commentsStatics.length==0) return await Music.findByIdAndUpdate(musicId,{comment: 0 } ,{new:false})
+    await Music.findByIdAndUpdate(musicId,{comment:commentsStatics[0].comments } ,{new:false})
 }
 CommentsSchema.pre(/^find/,function(next){
-    this.populate("user","userName")
+    this.populate("user","username")
     next()
 })
 CommentsSchema.post("save",function(doc){
