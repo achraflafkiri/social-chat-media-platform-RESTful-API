@@ -1,7 +1,9 @@
 const { Router } = require("express");
-const { checkLogin } = require("../middlewares/checkLogin");
-const { postNewComment,deleteComment } = require("../controllers/commentsController");
+const { checkLogin } = require("../controllers/authController");
+const {getOneLikeForFileId,getAllLikeForFileId,postNewLike,deleteLike}=require("../controllers/likesController")
 
 const router = Router({mergeParams:true})
-router.route("/").post(checkLogin,postNewComment).delete(checkLogin,deleteComment)
+
+router.route("/").get(getAllLikeForFileId).post(checkLogin,postNewLike).delete(checkLogin,deleteLike)
+router.route("/:likeId").get(getOneLikeForFileId)
 module.exports = router
