@@ -1,5 +1,4 @@
-
-# السلام عليكم  
+# social chat media platform RESTful API
 
 # Controllers:
 
